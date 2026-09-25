@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>France Emploi</title>
+
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -32,3 +33,102 @@
 
     .search-box {
       background: white;
+      padding: 25px;
+      border-radius: 15px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    }
+
+    input {
+      width: 100%;
+      padding: 14px;
+      margin: 8px 0;
+      box-sizing: border-box;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 16px;
+    }
+
+    button {
+      width: 100%;
+      padding: 14px;
+      margin-top: 10px;
+      border: none;
+      border-radius: 8px;
+      background: #0055b8;
+      color: white;
+      font-size: 17px;
+    }
+
+    #resultat {
+      margin-top: 20px;
+      padding: 15px;
+      background: #eef5ff;
+      border-radius: 10px;
+      display: none;
+    }
+
+    footer {
+      text-align: center;
+      padding: 25px;
+      color: #666;
+    }
+  </style>
+</head>
+
+<body>
+
+  <header>
+    <h1>France Emploi 🇫🇷</h1>
+    <p>Trouvez votre prochaine opportunité professionnelle</p>
+  </header>
+
+  <div class="container">
+    <div class="search-box">
+
+      <h2>Rechercher un emploi</h2>
+
+      <input id="metier" type="text"
+        placeholder="Métier : ex. Chauffeur, Plombier...">
+
+      <input id="ville" type="text"
+        placeholder="Ville : ex. Paris, Lyon...">
+
+      <button onclick="rechercher()">Rechercher</button>
+
+      <div id="resultat">
+        <strong>Recherche effectuée :</strong>
+        <p id="message"></p>
+      </div>
+
+    </div>
+  </div>
+
+  <footer>
+    © 2026 France Emploi
+  </footer>
+
+  <script>
+    function rechercher() {
+      const metier = document.getElementById("metier").value;
+      const ville = document.getElementById("ville").value;
+      const resultat = document.getElementById("resultat");
+      const message = document.getElementById("message");
+
+      if (!metier && !ville) {
+        message.textContent =
+          "Veuillez indiquer un métier ou une ville.";
+      } else {
+        message.textContent =
+          "Recherche : " +
+          (metier || "tous les métiers") +
+          " à " +
+          (ville || "toute la France") +
+          ".";
+      }
+
+      resultat.style.display = "block";
+    }
+  </script>
+
+</body>
+</html>
