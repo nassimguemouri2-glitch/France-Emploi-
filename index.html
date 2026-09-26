@@ -1,134 +1,89 @@
-<!DOCTYPE html>
-<html lang="fr">
+<!DOCTYPE html><html lang="fr">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>France Emploi</title>
-
   <style>
     body {
       font-family: Arial, sans-serif;
       margin: 0;
-      background: #f4f7fb;
+      background: #f5f5f5;
       color: #222;
-    }
+    }header {
+  background: #0055a4;
+  color: white;
+  padding: 25px;
+  text-align: center;
+}
 
-    header {
-      background: #0055b8;
-      color: white;
-      text-align: center;
-      padding: 30px 15px;
-    }
+.container {
+  max-width: 700px;
+  margin: 40px auto;
+  padding: 20px;
+}
 
-    header h1 {
-      margin: 0 0 10px;
-      font-size: 32px;
-    }
+.search-box {
+  background: white;
+  padding: 25px;
+  border-radius: 12px;
+  box-shadow: 0 2px 10px #ccc;
+}
 
-    .container {
-      max-width: 800px;
-      margin: 30px auto;
-      padding: 20px;
-    }
+input {
+  width: 100%;
+  padding: 15px;
+  margin: 10px 0;
+  box-sizing: border-box;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 16px;
+}
 
-    .search-box {
-      background: white;
-      padding: 25px;
-      border-radius: 15px;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-    }
+button {
+  width: 100%;
+  padding: 15px;
+  background: #0055a4;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 17px;
+  cursor: pointer;
+}
 
-    input {
-      width: 100%;
-      padding: 14px;
-      margin: 8px 0;
-      box-sizing: border-box;
-      border: 1px solid #ccc;
-      border-radius: 8px;
-      font-size: 16px;
-    }
+#resultats {
+  margin-top: 25px;
+}
 
-    button {
-      width: 100%;
-      padding: 14px;
-      margin-top: 10px;
-      border: none;
-      border-radius: 8px;
-      background: #0055b8;
-      color: white;
-      font-size: 17px;
-    }
-
-    #resultat {
-      margin-top: 20px;
-      padding: 15px;
-      background: #eef5ff;
-      border-radius: 10px;
-      display: none;
-    }
-
-    footer {
-      text-align: center;
-      padding: 25px;
-      color: #666;
-    }
   </style>
-</head>
+</head><body><header>
+  <h1>France Emploi</h1>
+  <p>Recherche d'emploi</p>
+</header><div class="container">
+  <div class="search-box">
+    <h2>Recherche d'emploi</h2><input id="metier" type="text" placeholder="Métier, exemple : chauffeur">
 
-<body>
+<input id="ville" type="text" placeholder="Ville, exemple : Paris">
 
-  <header>
-    <h1>France Emploi 🇫🇷</h1>
-    <p>Trouvez votre prochaine opportunité professionnelle</p>
-  </header>
+<button onclick="rechercher()">Rechercher</button>
 
-  <div class="container">
-    <div class="search-box">
+<div id="resultats"></div>
 
-      <h2>Rechercher un emploi</h2>
-
-      <input id="metier" type="text"
-        placeholder="Métier : ex. Chauffeur, Plombier...">
-
-      <input id="ville" type="text"
-        placeholder="Ville : ex. Paris, Lyon...">
-
-      <button onclick="rechercher()">Rechercher</button>
-
-      <div id="resultat">
-        <strong>Recherche effectuée :</strong>
-        <p id="message"></p>
-      </div>
-
-    </div>
   </div>
+</div><script>
+  function rechercher() {
+    const metier = document.getElementById("metier").value;
+    const ville = document.getElementById("ville").value;
+    const resultats = document.getElementById("resultats");
 
-  <footer>
-    © 2026 France Emploi
-  </footer>
-
-  <script>
-    function rechercher() {
-      const metier = document.getElementById("metier").value;
-      const ville = document.getElementById("ville").value;
-      const resultat = document.getElementById("resultat");
-      const message = document.getElementById("message");
-
-      if (!metier && !ville) {
-        message.textContent =
-          "Veuillez indiquer un métier ou une ville.";
-      } else {
-        message.textContent =
-          "Recherche : " +
-          (metier || "tous les métiers") +
-          " à " +
-          (ville || "toute la France") +
-          ".";
-      }
-
-      resultat.style.display = "block";
+    if (!metier && !ville) {
+      resultats.innerHTML = "<p>Veuillez entrer un métier ou une ville.</p>";
+      return;
     }
-  </script>
 
-</body>
+    resultats.innerHTML =
+      "<h3>Recherche effectuée</h3>" +
+      "<p>Métier : " + (metier || "Tous") + "</p>" +
+      "<p>Ville : " + (ville || "Toutes") + "</p>";
+  }
+</script></body>
 </html>
