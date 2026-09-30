@@ -1,89 +1,208 @@
-<!DOCTYPE html><html lang="fr">
+<!DOCTYPE html>
+<html lang="fr">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>France Emploi</title>
+
   <style>
     body {
       font-family: Arial, sans-serif;
       margin: 0;
       background: #f5f5f5;
       color: #222;
-    }header {
-  background: #0055a4;
-  color: white;
-  padding: 25px;
-  text-align: center;
-}
+    }
 
-.container {
-  max-width: 700px;
-  margin: 40px auto;
-  padding: 20px;
-}
+    header {
+      background: #0055a4;
+      color: white;
+      padding: 25px;
+      text-align: center;
+    }
 
-.search-box {
-  background: white;
-  padding: 25px;
-  border-radius: 12px;
-  box-shadow: 0 2px 10px #ccc;
-}
+    .container {
+      max-width: 700px;
+      margin: 40px auto;
+      padding: 20px;
+    }
 
-input {
-  width: 100%;
-  padding: 15px;
-  margin: 10px 0;
-  box-sizing: border-box;
-  border: 1px solid #ccc;
-  border-radius: 8px;
-  font-size: 16px;
-}
+    .search-box {
+      background: white;
+      padding: 25px;
+      border-radius: 12px;
+      box-shadow: 0 2px 10px #ccc;
+    }
 
-button {
-  width: 100%;
-  padding: 15px;
-  background: #0055a4;
-  color: white;
-  border: none;
-  border-radius: 8px;
-  font-size: 17px;
-  cursor: pointer;
-}
+    input {
+      width: 100%;
+      padding: 15px;
+      margin: 10px 0;
+      box-sizing: border-box;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 16px;
+    }
 
-#resultats {
-  margin-top: 25px;
-}
+    button {
+      width: 100%;
+      padding: 15px;
+      background: #0055a4;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 17px;
+      cursor: pointer;
+    }
 
+    #resultats {
+      margin-top: 25px;
+    }
+
+    .offre {
+      background: #f8f8f8;
+      padding: 15px;
+      margin: 12px 0;
+      border-radius: 8px;
+      border-left: 4px solid #0055a4;
+    }
+
+    .offre h3 {
+      margin-top: 0;
+      color: #0055a4;
+    }
+
+    .offre a {
+      color: #0055a4;
+      font-weight: bold;
+    }
   </style>
-</head><body><header>
+</head>
+
+<body>
+
+<header>
   <h1>France Emploi</h1>
   <p>Recherche d'emploi</p>
-</header><div class="container">
+</header>
+
+<div class="container">
+
   <div class="search-box">
-    <h2>Recherche d'emploi</h2><input id="metier" type="text" placeholder="Métier, exemple : chauffeur">
 
-<input id="ville" type="text" placeholder="Ville, exemple : Paris">
+    <h2>Recherche d'emploi</h2>
 
-<button onclick="rechercher()">Rechercher</button>
+    <input
+      id="metier"
+      type="text"
+      placeholder="Métier, exemple : plombier"
+    >
 
-<div id="resultats"></div>
+    <input
+      id="ville"
+      type="text"
+      placeholder="Ville, exemple : Paris"
+    >
+
+    <button onclick="rechercher()">Rechercher</button>
+
+    <div id="resultats"></div>
 
   </div>
-</div><script>
-  function rechercher() {
-    const metier = document.getElementById("metier").value;
-    const ville = document.getElementById("ville").value;
-    const resultats = document.getElementById("resultats");
 
-    if (!metier && !ville) {
-      resultats.innerHTML = "<p>Veuillez entrer un métier ou une ville.</p>";
+</div>
+
+<script>
+async function rechercher() {
+
+  const metier = document.getElementById("metier").value.trim();
+  const ville = document.getElementById("ville").value.trim();
+  const resultats = document.getElementById("resultats");
+
+  if (!metier && !ville) {
+    resultats.innerHTML =
+      "<p>Veuillez entrer un métier ou une ville.</p>";
+    return;
+  }
+
+  resultats.innerHTML = "<p>Recherche en cours...</p>";
+
+  try {
+
+    const params = new URLSearchParams();
+
+    if (metier) {
+      params.append("metier", metier);
+    }
+
+    if (ville) {
+      params.append("ville", ville);
+    }
+
+    const response = await fetch("/api/search?" + params.toString());
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.error || "Erreur de recherche");
+    }
+
+    const offres = data.resultats || [];
+
+    if (offres.length === 0) {
+      resultats.innerHTML =
+        "<p>Aucune offre trouvée.</p>";
       return;
     }
 
     resultats.innerHTML =
-      "<h3>Recherche effectuée</h3>" +
-      "<p>Métier : " + (metier || "Tous") + "</p>" +
-      "<p>Ville : " + (ville || "Toutes") + "</p>";
+      "<h3>" + offres.length + " offres trouvées</h3>";
+
+    offres.forEach(function(offre) {
+
+      const titre = offre.intitule || "Offre d'emploi";
+
+      const lieu =
+        offre.lieu &&
+        offre.lieu.libelle
+          ? offre.lieu.libelle
+          : "Lieu non précisé";
+
+      const entreprise =
+        offre.entreprise &&
+        offre.entreprise.nom
+          ? offre.entreprise.nom
+          : "Entreprise non précisée";
+
+      const contrat =
+        offre.typeContratLibelle ||
+        "Contrat non précisé";
+
+      const lien = offre.origineOffre &&
+                   offre.origineOffre.urlOrigine
+        ? offre.origineOffre.urlOrigine
+        : "#";
+
+      resultats.innerHTML += `
+        <div class="offre">
+          <h3>${titre}</h3>
+          <p><strong>Entreprise :</strong> ${entreprise}</p>
+          <p><strong>Lieu :</strong> ${lieu}</p>
+          <p><strong>Contrat :</strong> ${contrat}</p>
+          <a href="${lien}" target="_blank">
+            Voir l'offre
+          </a>
+        </div>
+      `;
+    });
+
+  } catch (error) {
+
+    resultats.innerHTML =
+      "<p>Une erreur est survenue pendant la recherche.</p>";
+
   }
-</script></body>
+}
+</script>
+
+</body>
 </html>
